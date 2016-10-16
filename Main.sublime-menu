@@ -1,0 +1,58 @@
+[
+    {
+        "caption": "Preferences",
+        "id": "preferences",
+        "mnemonic": "n",
+        "children":
+        [
+            {
+                "caption": "Package Settings",
+                "id": "package-settings",
+                "mnemonic": "P",
+                "children":
+                [
+                    {
+                        "caption": "cslint",
+                        "children":
+                        [
+                            {
+                                "caption": "Settings – Default",
+                                "command": "open_file", "args":
+                                {
+                                    "file": "${packages}/sublime-cslint/cslint.sublime-settings",
+                                }
+                            },
+                            {
+                                "caption": "Settings – User",
+                                "command": "edit_settings", "args":
+                                {   
+                                    "base_file": "${packages}/sublime-cslint/cslint.sublime-settings",
+                                    "user_file": "${packages}/User/cslint.sublime-settings"
+                                }
+                            },
+                            {
+                                "caption": "-"
+                            },
+                            {
+                                "caption": "Key Bindings – Default",
+                                "command": "open_file", "args":
+                                {
+                                    "file": "${packages}/sublime-cslint/Default (OSX).sublime-keymap",
+                                    "platform": "OSX"
+                                }
+                            },
+                            {
+                                "caption": "Key Bindings – User",
+                                "command": "open_file", "args":
+                                {
+                                    "file": "${packages}/User/Default (OSX).sublime-keymap",
+                                    "platform": "OSX"
+                                }
+                            } 
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+]

@@ -1,0 +1,10 @@
+[
+  {
+    "caption": "cslint: lint",
+    "command": "lint"
+  },
+  {
+    "caption": "cslint: fix",
+    "command": "fix"
+  }
+]
