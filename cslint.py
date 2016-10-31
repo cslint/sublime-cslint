@@ -51,41 +51,44 @@ COLOR_SCHEME_STYLES = {
         </dict>
     '''
 }
-
+HOVER_STYLE = '''
+    <style>
+        body#show-definitions {
+            margin: 4.8px;
+            padding: 0 0.2em;
+            font-family: sans-serif;
+            line-height: 1.6rem;
+            border: none;
+        }
+        .error {
+            color: red;
+        }
+        .warning {
+            color: yellow;
+        }
+        p, a {
+            display: inline;
+        }
+        p {
+            color: #fff;
+        }
+        .cslint-rule {
+            margin-left: 6px;
+        }
+        .cslint-close-btn {
+            padding: 0 0.4rem;
+            margin-left: 100px;
+            color: #fff;
+            background-color: #272821;
+            text-decoration: none;
+        }
+    </style>
+    '''
 HOVER_TMPL = '''
         <body id="show-definitions">
-            <style>
-                body {
-                    font-family: sans-serif;
-                    margin: 4.8px;
-                    padding: 0 0.2em;
-                    line-height: 1.6rem;
-                }
-                body#show-definitions {
-                    border: none;
-                }
-                .error {
-                    background-color: #bd2336;
-                }
-                p, a {
-                    display: inline;
-                }
-                p {
-                    color: #fff;
-                }
-                .cslint-rule {
-                    margin-left: 6px;
-                }
-                .cslint-close-btn {
-                    padding: 0 0.4rem;
-                    margin-left: 6px;
-                    color: #fff;
-                    background-color: #272821;
-                    text-decoration: none;
-                }
-            </style>
-            <p class="cslint-rule-txt">%s:  %s</p>
-            <a class="cslint-rule" href="%s">%s</a>
+            {css}
+            <p class="cslint-rule-txt"><span class="{type}">{type}:</span>&nbsp;&nbsp;{msg}</p>
+            <a class="cslint-rule" href="{url}">{ruleId}</a>
             <a class="cslint-close-btn" href="close">x</a>
         </body>
     '''
@@ -143,6 +146,7 @@ def hightlight(view, messages):
         region = sublime.Region(pos, pos + length)
         problem = {'start': pos, 'end': pos + length, 'message': {
             'type': error_type,
+            'from': msg['from'],
             'ruleId': msg['ruleId'],
             'message': msg['message']
         }}
@@ -220,15 +224,25 @@ class CSLintEvent(sublime_plugin.EventListener):
         isValid, ext = fileCheck(filename)
         if not isValid:
             return
-
-        ruleLink = JSDOCLINK if ext == '.js' else CSSDOCLink
-
-        message = problem['message']
+        
         ruleId = problem['ruleId']
-        view.show_popup(HOVER_TMPL % (problem['type'], message, ruleLink + ruleId, ruleId),
-            flags=sublime.HIDE_ON_MOUSE_MOVE_AWAY,
-            on_navigate=on_navigate)
 
+        if problem['from'] == 'eslint':
+            ruleLink = JSDOCLINK + ruleId
+        elif problem['from'] == 'stylelint':
+            ruleLink = CSSDOCLink + ruleId
+        else:
+            ruleLink = 'plugin'
+
+
+        view.show_popup(HOVER_TMPL.format(
+                css = HOVER_STYLE, 
+                type = problem['type'], 
+                msg = problem['message'], 
+                url = ruleLink, 
+                ruleId = ruleId),
+            flags = sublime.HIDE_ON_MOUSE_MOVE_AWAY,
+            on_navigate = on_navigate)
 
     def on_activated_async(self, view):
         view.run_command('lint')
