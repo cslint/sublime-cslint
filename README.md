@@ -22,7 +22,8 @@ First of all, make sure [cslint][1] has been installed, and cslint path is in `c
 ```json
   {
     "node_bin": "/usr/local/bin/node",
-    "cslint_bin": "/usr/local/bin/cslint"
+    "cslint_bin": "/usr/local/bin/cslint",
+    "show_popup": false
   }
 ```
   

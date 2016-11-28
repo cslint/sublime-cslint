@@ -1,0 +1,4 @@
+0.1.1
+-------------------------
+
+- add setting 'show_popup' to enable popup show

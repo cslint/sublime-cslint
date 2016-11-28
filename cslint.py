@@ -251,6 +251,9 @@ class CSLintEvent(sublime_plugin.EventListener):
         view.run_command('lint')
 
     def on_hover(self, view, point, hover_zone):
+        if not settings.get('show_popup'):
+            return
+
         if (len(problems)):
             for problem in problems:
                 if (point >= problem['start'] and point <= problem['end']):
