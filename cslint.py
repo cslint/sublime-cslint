@@ -184,16 +184,21 @@ def processor(view, fixable = False):
         return
 
     args = [NODE_BIN, CSLINT_BIN, filename, '--format=json']
-
+    
     if (fixable == True):
         args.append('--fix')
 
+    print('fixable: ', fixable)
+    
     proc = subprocess.Popen(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     
     try:
         outs, errs = proc.communicate()
         results = json.loads(outs.decode('utf-8'))
+
     except Exception as e:
+        for t in (ERROR, WARNING):
+            view.erase_regions(t)
         return
 
     if len(results):
@@ -205,15 +210,18 @@ class LintCommand(sublime_plugin.TextCommand):
 
     def run(self, edit):
         processor(self.view)
+        # pass
 
 class FixCommand(sublime_plugin.TextCommand):
 
     def run(self, edit):
         processor(self.view, True)
+        # pass
 
 class CSLintEvent(sublime_plugin.EventListener):
     
     def open_url(self, view, problem):
+        
         def on_navigate(link): 
             if link == "close":
                 view.hide_popup()
@@ -245,10 +253,18 @@ class CSLintEvent(sublime_plugin.EventListener):
             on_navigate = on_navigate)
 
     def on_activated_async(self, view):
-        view.run_command('lint')
+        # view.run_command('lint')
+        pass
 
-    def on_post_save(self, view):
+    def on_modified_async(self, view):
+        # print('on modified')
+        # view.run_command('lint')
+        pass
+
+    def on_post_save_async(self, view):
+        #print('on save')
         view.run_command('lint')
+        # pass
 
     def on_hover(self, view, point, hover_zone):
         if not settings.get('show_popup'):

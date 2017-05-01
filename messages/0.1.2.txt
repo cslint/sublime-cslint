@@ -1,0 +1,5 @@
+0.1.2
+-------------------------
+
+- lint on_post_save_sync
+- remove lint on activate
